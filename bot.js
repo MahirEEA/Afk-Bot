@@ -19,12 +19,13 @@ function createBot() {
    });
 
    bot.loadPlugin(pathfinder);
-   const mcData = require('minecraft-data')(bot.version);
-   const defaultMove = new Movements(bot, mcData);
-   //bot.settings.colorsEnabled = false;
-   bot.pathfinder.setMovements(defaultMove);
 
    bot.once('spawn', () => {
+      // Pathfinder verileri bot oyuna girdikten sonra güvenle yükleniyor
+      const mcData = require('minecraft-data')(bot.version);
+      const defaultMove = new Movements(bot, mcData);
+      bot.pathfinder.setMovements(defaultMove);
+
       logger.info("Bot joined to the server");
 
       if (config.utils['auto-auth'].enabled) {
@@ -66,7 +67,7 @@ function createBot() {
 
       if (config.position.enabled) {
          logger.info(
-             `Starting moving to target location (${pos.x}, ${pos.y}, ${pos.z})`
+            `Starting moving to target location (${pos.x}, ${pos.y}, ${pos.z})`
          );
          bot.pathfinder.setGoal(new GoalBlock(pos.x, pos.y, pos.z));
       }
@@ -87,7 +88,7 @@ function createBot() {
             setInterval(() => {
                if(attackMobs) {
                      let entity = bot.nearestEntity(e => e.type !== 'object' && e.type !== 'player'
-                         && e.type !== 'global' && e.type !== 'orb' && e.type !== 'other');
+                        && e.type !== 'global' && e.type !== 'orb' && e.type !== 'other');
 
                      if(entity) {
                         bot.attack(entity);
@@ -121,7 +122,7 @@ function createBot() {
    bot.on('goal_reached', () => {
       if(config.position.enabled) {
          logger.info(
-             `Bot arrived to target location. ${bot.entity.position}`
+            `Bot arrived to target location. ${bot.entity.position}`
          );
       }
    });
@@ -157,8 +158,7 @@ function createBot() {
 }
 
 function circleWalk(bot, radius) {
-   // Make bot walk in square with center in bot's  wthout stopping
-    return new Promise(() => {
+   return new Promise(() => {
         const pos = bot.entity.position;
         const x = pos.x;
         const y = pos.y;
@@ -177,7 +177,7 @@ function circleWalk(bot, radius) {
              bot.pathfinder.setGoal(new GoalXZ(points[i][0], points[i][2]));
              i++;
         }, 1000);
-    });
+   });
 }
 
 createBot();
